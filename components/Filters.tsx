@@ -2,13 +2,22 @@
 
 import { useState } from 'react';
 
+interface FilterValues {
+  categories?: string[];
+  priceRange?: [number, number];
+  brands?: string[];
+  rating?: number | null;
+  discount?: number | null;
+  inStock?: boolean | null;
+}
+
 interface FiltersProps {
-  onFilterChange: (filters: any) => void;
+  onFilterChange: (filters: FilterValues) => void;
 }
 
 export default function Filters({ onFilterChange }: FiltersProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState([0, 200000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [selectedDiscount, setSelectedDiscount] = useState<number | null>(null);
@@ -50,7 +59,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     applyFilters({ inStock: stock });
   };
 
-  const applyFilters = (newFilters: any) => {
+  const applyFilters = (newFilters: Partial<FilterValues>) => {
     onFilterChange({
       categories: selectedCategories,
       priceRange,
@@ -113,7 +122,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
             max="200000"
             value={priceRange[1]}
             onChange={(e) => {
-              const newRange = [0, parseInt(e.target.value)];
+              const newRange: [number, number] = [0, parseInt(e.target.value)];
               setPriceRange(newRange);
               applyFilters({ priceRange: newRange });
             }}

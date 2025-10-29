@@ -8,6 +8,15 @@ import Filters from '@/components/Filters';
 import ProductCard from '@/components/ProductCard';
 import { products } from '@/data/products';
 
+interface FilterValues {
+  categories?: string[];
+  priceRange?: [number, number];
+  brands?: string[];
+  rating?: number | null;
+  discount?: number | null;
+  inStock?: boolean | null;
+}
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
@@ -28,12 +37,12 @@ function ProductsContent() {
     setFilteredProducts(filtered);
   }, [categoryParam]);
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: FilterValues) => {
     let filtered = [...products];
 
     // Category filter
     if (filters.categories && filters.categories.length > 0) {
-      filtered = filtered.filter((p) => filters.categories.includes(p.category));
+      filtered = filtered.filter((p) => filters.categories?.includes(p.category));
     } else if (categoryParam) {
       filtered = filtered.filter((p) => p.category === categoryParam);
     }
@@ -41,23 +50,23 @@ function ProductsContent() {
     // Price range filter
     if (filters.priceRange) {
       filtered = filtered.filter(
-        (p) => p.finalPrice >= filters.priceRange[0] && p.finalPrice <= filters.priceRange[1]
+        (p) => p.finalPrice >= filters.priceRange![0] && p.finalPrice <= filters.priceRange![1]
       );
     }
 
     // Brand filter
     if (filters.brands && filters.brands.length > 0) {
-      filtered = filtered.filter((p) => filters.brands.includes(p.brand));
+      filtered = filtered.filter((p) => filters.brands?.includes(p.brand));
     }
 
     // Rating filter
     if (filters.rating) {
-      filtered = filtered.filter((p) => p.rating >= filters.rating);
+      filtered = filtered.filter((p) => p.rating >= filters.rating!);
     }
 
     // Discount filter
     if (filters.discount) {
-      filtered = filtered.filter((p) => p.discount >= filters.discount);
+      filtered = filtered.filter((p) => p.discount >= filters.discount!);
     }
 
     // Stock filter
